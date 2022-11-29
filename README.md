@@ -43,7 +43,7 @@ Any reference to `rust-http-starter` should be changed to your project name as w
 Required GitHub secrets for Actions to run successfully
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
-- `GITHUB_TOKEN`
+- `PAT` Personal Access Token for Github to commit releases
 
 ### WalletConnect Specific
 - `ASSIGN_TO_PROJECT_GITHUB_TOKEN`
