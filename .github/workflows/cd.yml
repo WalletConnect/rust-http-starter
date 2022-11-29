@@ -52,7 +52,6 @@ jobs:
       url: https://http-starter.walletconnect.com/health
     needs:
       - get-version
-      - build-container
     steps:
       - name: Checkout
         uses: actions/checkout@v3
