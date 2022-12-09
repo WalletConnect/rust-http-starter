@@ -7,3 +7,7 @@
 
 # Terraform
 terraform/.terraform*
+
+# Integration
+node_modules
+*.log
