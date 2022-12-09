@@ -1,4 +1,8 @@
-use {dotenv::dotenv, rust_http_starter::Result, rust_http_starter::config::Configuration, tokio::sync::broadcast};
+use {
+    dotenv::dotenv,
+    rust_http_starter::{config::Configuration, Result},
+    tokio::sync::broadcast,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {

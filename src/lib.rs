@@ -28,8 +28,8 @@ use {
     std::{net::SocketAddr, str::FromStr, sync::Arc, time::Duration},
     tokio::{select, sync::broadcast},
     tower::ServiceBuilder,
-    tracing_subscriber::fmt::format::FmtSpan,
     tracing::info,
+    tracing_subscriber::fmt::format::FmtSpan,
 };
 
 build_info::build_info!(fn build_info);
