@@ -7,6 +7,9 @@ pub struct Configuration {
     #[serde(default = "default_log_level")]
     pub log_level: String,
     pub database_url: String,
+    #[serde(default = "default_is_test", skip)]
+    /// This is an internal flag to disable logging, cannot be defined by user
+    pub is_test: bool,
 
     // TELEMETRY
     pub telemetry_enabled: Option<bool>,
@@ -30,4 +33,8 @@ fn default_port() -> u16 {
 
 fn default_log_level() -> String {
     "WARN".to_string()
+}
+
+fn default_is_test() -> bool {
+    false
 }
