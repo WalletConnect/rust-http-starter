@@ -10,5 +10,5 @@ async fn main() -> Result<()> {
     dotenv().ok();
 
     let config = Configuration::new().expect("Failed to load config!");
-    Ok(rust_http_starter::bootstap(shutdown, config).await?)
+    rust_http_starter::bootstap(shutdown, config).await
 }
