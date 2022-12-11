@@ -11,6 +11,16 @@ This project also includes the standard CI/CD:
 - Terraform CI
 - CD
 - Intake
+- Mocha (NodeJS) based integration tests
+
+## Running the app
+
+* Build: `cargo build`
+* Test: `cargo test`
+* Run: `docker-compose-up`
+* Integration test: `yarn install` (once) and then `yarn integration:local(dev/staging/prod)`
+
+
 
 ## Required Values to Change
 Any reference to `rust-http-starter` should be changed to your project name as well as all the below list:
@@ -33,6 +43,8 @@ Any reference to `rust-http-starter` should be changed to your project name as w
   Change any references to Rust HTTP Starter\
 - [ ] `/.github/workflows/release.yml`
   On line 95-97 there are references to the registry name on ECR/GHCR ensure you change this
+- [ ] `/.github/integration/integration.tests.ts`
+  Update the URLs
 
 ### WalletConnect Specific
 
