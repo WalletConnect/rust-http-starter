@@ -67,7 +67,7 @@ jobs:
           environment: staging
           app-name: ${{ github.event.repository.name }}
 
-  validate_staging:
+  validate-staging:
     needs: [deploy-infra-staging]
     uses: ./.github/workflows/validate.yml
     with:
