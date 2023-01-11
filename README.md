@@ -31,6 +31,8 @@ Any reference to `rust-http-starter` should be changed to your project name as w
   Change package name and authors, then build the project to re-gen the `Cargo.lock`
 - [ ] `/terraform/main.tf`
   Change `app_name` to the repo's name
+- [ ] `/terraform/main.tf`
+  Setup a new hosted zone in the [infra repository](https://github.com/WalletConnect/infra/blob/master/terraform/main.tf#L123)
 - [ ] `/terraform/variables.tf`
   Change the default value of `public_url`
 - [ ] `/terraform/backend.tf`
