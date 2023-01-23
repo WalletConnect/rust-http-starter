@@ -33,3 +33,89 @@ module "dns" {
 resource "aws_prometheus_workspace" "prometheus" {
   alias = "prometheus-${terraform.workspace}-${local.app_name}"
 }
+
+module "o11y" {
+  source = "./monitoring"
+
+  environment = terraform.workspace
+  app_name = local.app_name
+  prometheus_workspace_id = aws_prometheus_workspace.prometheus.id
+}
+
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  name   = "${terraform.workspace}-${local.app_name}"
+
+  cidr = "10.0.0.0/16"
+
+  azs             = var.azs
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+
+  private_subnet_tags = {
+    Visibility = "private"
+  }
+  public_subnet_tags = {
+    Visibility = "public"
+  }
+
+  enable_dns_support     = true
+  enable_dns_hostnames   = true
+  enable_nat_gateway     = true
+  single_nat_gateway     = true
+  one_nat_gateway_per_az = false
+}
+
+# TODO: Remove this later
+module "database_cluster" {
+  source = "terraform-aws-modules/rds-aurora/aws"
+
+  name           = "${terraform.workspace}-${local.app_name}-database"
+  engine         = "aurora-postgresql"
+  engine_version = "13.6"
+  engine_mode    = "provisioned"
+  instance_class = "db.serverless"
+  instances = {
+    1 = {}
+  }
+
+  database_name = "postgres"
+
+  vpc_id  = module.vpc.vpc_id
+  subnets = module.vpc.private_subnets
+
+  allowed_cidr_blocks = [module.vpc.vpc_cidr_block]
+
+  storage_encrypted = true
+  apply_immediately = true
+
+  allow_major_version_upgrade = true
+
+  serverlessv2_scaling_configuration = {
+    min_capacity = 2
+    max_capacity = 10
+  }
+}
+
+data "aws_ecr_repository" "repository" {
+  name = "http-starter"
+}
+
+module "ecs" {
+  source = "./ecs"
+
+  app_name            = "${terraform.workspace}-${local.app_name}"
+  prometheus_endpoint = aws_prometheus_workspace.prometheus.prometheus_endpoint
+  database_url        = "postgres://${module.database_cluster.cluster_master_username}:${module.database_cluster.cluster_master_password}@${module.database_cluster.cluster_endpoint}:${module.database_cluster.cluster_port}/postgres"
+  image               = "${data.aws_ecr_repository.repository.repository_url}:${local.version}"
+  acm_certificate_arn = module.dns.certificate_arn
+  cpu                 = 512
+  fqdn                = local.fqdn
+  memory              = 1024
+  private_subnets     = module.vpc.private_subnets
+  public_subnets      = module.vpc.public_subnets
+  region              = var.region
+  route53_zone_id     = module.dns.zone_id
+  vpc_cidr            = module.vpc.vpc_cidr_block
+  vpc_id              = module.vpc.vpc_id
+}
