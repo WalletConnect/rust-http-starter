@@ -37,8 +37,8 @@ resource "aws_prometheus_workspace" "prometheus" {
 module "o11y" {
   source = "./monitoring"
 
-  environment = terraform.workspace
-  app_name = local.app_name
+  environment             = terraform.workspace
+  app_name                = local.app_name
   prometheus_workspace_id = aws_prometheus_workspace.prometheus.id
 }
 
