@@ -6,15 +6,43 @@ services:
       - "3001:16686"
 
   postgres:
+    networks:
+      - rust-http-starter
     image: postgres
     environment:
       - POSTGRES_PASSWORD=root
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # Comment in if you need redis
+  # redis:
+  #   networks:
+  #     - rust-http-starter
+  #   image: "redis:6-alpine"
+  #   ports:
+  #     - 6379:6379
+  #   healthcheck:
+  #     test: [ "CMD", "redis-cli", "ping" ]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+      
   rust-http-starter:
-    build: .
+    networks:
+      - rust-http-starter
+    build:
+      dockerfile: ./Dockerfile-dev
+      context: .
     depends_on:
-      - jaeger
-      - postgres
+      jaeger:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      # redis:
+      #   condition: service_healthy
     ports:
       - "3000:3000"
     environment:
@@ -23,3 +51,16 @@ services:
       - DATABASE_URL=postgres://postgres:root@postgres:5432/postgres
       - TELEMETRY_ENABLED=true
       - TELEMETRY_GRPC_URL=http://jaeger:4317
+      - ATTESTATION_CACHE_URL=redis://redis:6379/0
+    volumes:
+      - ./:/rust-http-starter/
+    healthcheck:
+      test: [ "CMD", "curl", "localhost:3000/health" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  rust-http-starter:
+    ipam:
+      driver: default

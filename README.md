@@ -47,6 +47,10 @@ Any reference to `rust-http-starter` should be changed to your project name as w
   On line 95-97 there are references to the registry name on ECR/GHCR ensure you change this
 - [ ] `/.github/integration/integration.tests.ts`
   Update the URLs
+- [ ] `/Dockerfile-dev`
+  Update the workdir
+- [ ] `/docker-compose.yml`
+  Update references to rust-http-starter
 
 ### WalletConnect Specific
 
