@@ -47,10 +47,14 @@ services:
       - "3000:3000"
     environment:
       - PORT=3000
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=info,rust_http_starter=trace
+      - LOG_LEVEL_OTEL=info,rust_http_starter=trace
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - TELEMETRY_PROMETHEUS_PORT=3002
+      - OTEL_SERVICE_NAME=rust-http-starter
+      - OTEL_RESOURCE_ATTRIBUTES=environment=dev,region=local,version=0.11.5
+      - OTEL_TRACES_SAMPLER=always_on
       - DATABASE_URL=postgres://postgres:root@postgres:5432/postgres
-      - TELEMETRY_ENABLED=true
-      - TELEMETRY_GRPC_URL=http://jaeger:4317
       - ATTESTATION_CACHE_URL=redis://redis:6379/0
     volumes:
       - ./:/rust-http-starter/
