@@ -39,7 +39,7 @@ impl Metrics {
 
         opentelemetry::global::set_meter_provider(meter);
 
-        let meter = opentelemetry::global::meter("echo-server");
+        let meter = opentelemetry::global::meter("rust-http-starter");
 
         let clients_counter = meter
             .i64_up_down_counter("registered_clients")
