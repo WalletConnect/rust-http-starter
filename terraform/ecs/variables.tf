@@ -6,7 +6,19 @@ variable "app_name" {
   type = string
 }
 
+variable "environment" {
+  type = string
+}
+
 variable "image" {
+  type = string
+}
+
+variable "image_version" {
+  type = string
+}
+
+variable "aws_otel_collector_ecr_repository_url" {
   type = string
 }
 
@@ -52,5 +64,9 @@ variable "cpu" {
 }
 
 variable "memory" {
+  type = number
+}
+
+variable "telemetry_sample_ratio" {
   type = number
 }

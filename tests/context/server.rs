@@ -31,8 +31,8 @@ impl RustHttpStarter {
                     port: public_port,
                     log_level: "INFO".into(),
                     database_url: "postgres://postgres@localhost:5432/postgres".into(),
-                    telemetry_enabled: None,
-                    telemetry_grpc_url: None,
+                    otel_exporter_otlp_endpoint: None,
+                    telemetry_prometheus_port: Some(get_random_port()),
                     is_test: true,
                 };
 
